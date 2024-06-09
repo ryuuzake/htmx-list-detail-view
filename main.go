@@ -4,14 +4,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/ryuuzake/htmx-list-detail-view/controller"
 	"github.com/ryuuzake/htmx-list-detail-view/middleware"
-	"github.com/ryuuzake/htmx-list-detail-view/utils"
-	"github.com/ryuuzake/htmx-list-detail-view/view"
 )
 
 func main() {
@@ -19,22 +16,10 @@ func main() {
 
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		e.Router.Use(middleware.LoadAuthContextFromCookie(app))
-		redirectToLoginRoutes := e.Router.Group("", middleware.RedirectToLogin())
-		mustBeLoggedInRoutes := e.Router.Group("", apis.RequireAdminOrRecordAuth())
 
-		e.Router.GET("/", func(c echo.Context) error {
-			isLoggedIn := c.Get(apis.ContextAuthRecordKey) != nil
-			return utils.Render(view.Index(isLoggedIn), c)
-		})
-
-		loginHandler := controller.NewLoginHandler(app)
-		e.Router.GET("/login", loginHandler.GetLogin)
-		e.Router.POST("/login", loginHandler.PostLogin)
-		mustBeLoggedInRoutes.POST("/logout", loginHandler.PostLogout)
-
-		todoHandler := controller.NewTodoHandler(app)
-		redirectToLoginRoutes.GET("/todos", todoHandler.GetTodos)
-		mustBeLoggedInRoutes.POST("/todos/toggle/:id", todoHandler.PostToggleTodo)
+		projectHandler := controller.NewProjectHandler(app)
+		e.Router.GET("/", projectHandler.GetProjects)
+		e.Router.GET("/project/:id", projectHandler.GetProjectByParentId)
 
 		e.Router.GET("/*", apis.StaticDirectoryHandler(os.DirFS("./public"), false))
 		return nil
