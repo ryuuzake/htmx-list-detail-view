@@ -8,10 +8,10 @@ import (
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
-	"github.com/ryuuzake/pocket-htmx/controller"
-	"github.com/ryuuzake/pocket-htmx/middleware"
-	"github.com/ryuuzake/pocket-htmx/utils"
-	"github.com/ryuuzake/pocket-htmx/view"
+	"github.com/ryuuzake/htmx-list-detail-view/controller"
+	"github.com/ryuuzake/htmx-list-detail-view/middleware"
+	"github.com/ryuuzake/htmx-list-detail-view/utils"
+	"github.com/ryuuzake/htmx-list-detail-view/view"
 )
 
 func main() {

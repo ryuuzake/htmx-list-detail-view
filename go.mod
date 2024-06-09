@@ -1,4 +1,4 @@
-module github.com/ryuuzake/pocket-htmx
+module github.com/ryuuzake/htmx-list-detail-view
 
 go 1.21.1
 

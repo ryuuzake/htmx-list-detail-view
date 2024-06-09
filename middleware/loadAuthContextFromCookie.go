@@ -8,7 +8,7 @@ import (
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/tokens"
 	"github.com/pocketbase/pocketbase/tools/security"
-	"github.com/ryuuzake/pocket-htmx/utils"
+	"github.com/ryuuzake/htmx-list-detail-view/utils"
 	"github.com/spf13/cast"
 )
 

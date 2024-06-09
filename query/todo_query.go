@@ -3,7 +3,7 @@ package query
 import (
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase/daos"
-	"github.com/ryuuzake/pocket-htmx/model"
+	"github.com/ryuuzake/htmx-list-detail-view/model"
 )
 
 func TodoQuery(dao *daos.Dao) *dbx.SelectQuery {

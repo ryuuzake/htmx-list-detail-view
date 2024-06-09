@@ -8,8 +8,8 @@ import (
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/forms"
 	"github.com/pocketbase/pocketbase/tokens"
-	"github.com/ryuuzake/pocket-htmx/utils"
-	"github.com/ryuuzake/pocket-htmx/view/login"
+	"github.com/ryuuzake/htmx-list-detail-view/utils"
+	"github.com/ryuuzake/htmx-list-detail-view/view/login"
 )
 
 type LoginHandler struct{ Handler }
