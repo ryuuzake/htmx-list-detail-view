@@ -11,7 +11,7 @@ RUN tar -xvzf ./tmp/templ.tar.gz templ && rm ./tmp/templ.tar.gz && ./templ gener
   chmod +x ./tailwindcss && ./tailwindcss -i tailwind.css -o ./public/css/tailwind.css && \
   GOPROXY=direct go build -o ./main .
 # uncomment to copy the local pb_migrations dir into the image
-# COPY ./pb_migrations /pb/pb_migrations
+COPY ./pb_migrations /pb/pb_migrations
 # uncomment to copy the local pb_hooks dir into the image
 # COPY ./pb_hooks /pb/pb_hooks
 EXPOSE 8080

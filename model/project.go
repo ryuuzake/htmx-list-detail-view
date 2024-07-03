@@ -19,6 +19,11 @@ type Project struct {
 	models.BaseModel
 }
 
+type ProjectList struct {
+	Project
+	Children []*ProjectList
+}
+
 func (*Project) TableName() string {
 	return PROJECT
 }

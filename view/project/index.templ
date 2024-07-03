@@ -6,30 +6,85 @@ import (
 	"github.com/ryuuzake/htmx-list-detail-view/view/layout"
 )
 
-func projectChildUrl(id string) string {
+func projectUrl(id string) string {
 	return fmt.Sprintf("%s%s", "/project/", id)
 }
 
-templ ProjectMasterView(projects []*model.Project) {
+func projectTarget(id string) string {
+	return fmt.Sprintf("click target:#%s", id)
+}
+
+func projectXData(id string) string {
+	return fmt.Sprintf("{ id: \"%s\" }", id)
+}
+
+templ ProjectView(projects []*model.ProjectList, project *model.Project, isShowDetail bool) {
 	@layout.Base() {
 		<div class="flex flex-1 flex-row">
-			<aside class="flex-1">
-				@ProjectList(projects)
+			<aside x-data="{ 
+				activeAccordions: [], 
+				setActiveAccordion(id) { 
+						if (this.activeAccordions.includes(id)) {
+								this.activeAccordions = this.activeAccordions.filter(item => item !== id);
+						} else {
+								this.activeAccordions.push(id);
+						}
+				},
+				isAccordionActive(id) {
+						return this.activeAccordions.includes(id);
+				}
+		}" class="flex-1">
+				@ProjectMasterView(projects)
 			</aside>
-			<main class="flex-1">Detail</main>
+			<main id="detail" class="flex-1">
+				if isShowDetail {
+					@ProjectDetailView(project)
+				} else {
+					<p>Silahkan Pilih Project</p>
+				}
+			</main>
 		</div>
 	}
 }
 
-templ ProjectList(projects []*model.Project) {
-	<ul class="cursor-pointer hover:bg-slate-300 ml-4">
-		for _, project := range projects {
-			<li hx-get={ projectChildUrl(project.Id) } hx-trigger="click" hx-target="find ul">
-				<p>
-					{ project.Name }
-				</p>
-				<ul></ul>
-			</li>
+templ ProjectDetailView(project *model.Project) {
+	<div>
+		<h3>{ project.Name }</h3>
+		<p>{ project.Type }</p>
+	</div>
+}
+
+templ ProjectMasterView(projects []*model.ProjectList) {
+	for _, project := range projects {
+		@ProjectItem(project)
+	}
+}
+
+templ ProjectItem(project *model.ProjectList) {
+	<div x-data={ projectXData(project.Id) }
+		:class="{ 'text-neutral-800' : isAccordionActive(id), 'text-neutral-600 hover:text-neutral-800' : !isAccordionActive(id) }"
+		class="duration-200 ease-out rounded-md cursor-pointer group" x-cloak>
+		<button id={ project.Id } x-on:htmx:before-on-load="setActiveAccordion(id)"
+			class="flex items-center justify-between w-full px-5 py-4 font-semibold text-left select-none"
+			hx-get={ projectUrl(project.Id) } hx-trigger="click" hx-target="#detail" hx-push-url="true">
+			<span>{ project.Name }</span>
+			if len(project.Children) != 0 {
+				<div :class="{ 'rotate-90': isAccordionActive(id) }"
+					class="relative flex items-center justify-center w-2.5 h-2.5 duration-300 ease-out">
+					<div class="absolute w-0.5 h-full bg-neutral-500 group-hover:bg-neutral-800 rounded-full"></div>
+					<div :class="{ 'rotate-90': isAccordionActive(id) }"
+						class="absolute w-full h-0.5 ease duration-500 bg-neutral-500 group-hover:bg-neutral-800 rounded-full"></div>
+				</div>
+			}
+		</button>
+		if len(project.Children) != 0 {
+			<div x-show="isAccordionActive(id)" x-collapse x-cloak>
+				<div class="pl-5 pt-0">
+						for _, project := range project.Children {
+							@ProjectItem(project)
+						}
+				</div>
+			</div>
 		}
-	</ul>
+	</div>
 }

@@ -16,23 +16,23 @@ func NewProjectHandler(app *pocketbase.PocketBase) ProjectHandler {
 }
 
 func (h ProjectHandler) GetProjects(c echo.Context) error {
-	projectList, err := query.GetListProject(h.app.Dao())
+	projectList, err := query.GetListProjectWithChildren(h.app.Dao())
 
 	if err != nil {
 		return apis.NewBadRequestError("", err)
 	}
 
-	return utils.Render(project.ProjectMasterView(projectList), c)
+	return utils.Render(project.ProjectView(projectList, nil, false), c)
 }
 
-func (h ProjectHandler) GetProjectByParentId(c echo.Context) error {
+func (h ProjectHandler) GetProjectById(c echo.Context) error {
 	id := c.PathParam("id")
 
-	projectList, err := query.GetListProjectByParentId(h.app.Dao(), id)
+	result, err := query.GetProjectById(h.app.Dao(), id)
 
 	if err != nil {
 		return apis.NewNotFoundError("Project Not Found", err)
 	}
 
-	return utils.Render(project.ProjectList(projectList), c)
+	return utils.Render(project.ProjectDetailView(result), c)
 }
