@@ -34,5 +34,17 @@ func (h ProjectHandler) GetProjectById(c echo.Context) error {
 		return apis.NewNotFoundError("Project Not Found", err)
 	}
 
-	return utils.Render(project.ProjectDetailView(result), c)
+	isHTMX := c.Request().Header.Get("HX-Request")
+	if isHTMX != "" {
+		return utils.Render(project.ProjectDetailView(result), c)
+	} else {
+		projectList, err := query.GetListProjectWithChildren(h.app.Dao())
+
+		if err != nil {
+			return apis.NewBadRequestError("", err)
+		}
+
+		return utils.Render(project.ProjectView(projectList, result, true), c)
+	}
+
 }
